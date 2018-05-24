@@ -115,7 +115,7 @@ class BinarySearchTree:
 		return True
 
 def delete_helper(node, item):
-	if node.right.item == item or node.left.item == item:
+	if (node.right != None and node.right.item == item) or (node.left != None and node.left.item == item):
 		return node
 	elif item < node.item:
 		return delete_helper(node.left, item)
