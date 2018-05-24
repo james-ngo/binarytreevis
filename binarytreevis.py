@@ -3,6 +3,16 @@ from binary_search_tree import *
 import tkinter
 import sys
 
+class BTNode(RawTurtle):
+	def __init__(self, canvas = None):
+		if canvas != None:
+			super().__init__(canvas)
+			self.ht()
+			self.shape("circle")
+			self.penup()
+			self.speed(5)
+			self.goto(-100,-100)
+
 class BinaryTreeVis(tkinter.Frame):
 	def __init__(self, master=None):
 		super().__init__(master)
@@ -24,20 +34,57 @@ class BinaryTreeVis(tkinter.Frame):
 		quitButton = tkinter.Button(frame, text = "Quit", command=quitHandler)
 		quitButton.pack()
 
-		label = tkinter.Label(frame,text="Node Value:", fg="black")
+		label = tkinter.Label(frame,text="Node Value:")
 		label.pack()
 
-		entry = tkinter.Entry(frame, width=25)
+		nodevalue = tkinter.StringVar()
+
+		entry = tkinter.Entry(frame, width=25, textvariable=nodevalue)
 		entry.pack()
 
-		insertButton = tkinter.Button(frame, text = "Insert") #add command=insertHander parameter
+		tree = BinarySearchTree()
+
+		def insertHandler():
+			try:
+				node = int(nodevalue.get())
+			except:
+				return
+			if node in tree:
+				pass
+			else:
+				tree.insert(node)
+				print(tree.inorder())
+
+		def removeHandler():
+			try:
+				node = int(nodevalue.get())
+			except:
+				return
+			if node in tree:
+				tree.delete(node)
+				print(tree.inorder())
+			else:
+				pass
+
+		def containsHandler():
+			try:
+				node = int(nodevalue.get())
+			except:
+				return
+			if node in tree:
+				tkinter.messagebox.showwarning("Search Result","Item is in tree!")
+			else:
+				tkinter.messagebox.showwarning("Search Resuly","Item is NOT in tree!")
+
+		insertButton = tkinter.Button(frame, text = "Insert", command=insertHandler) #add command=insertHander parameter
 		insertButton.pack()
 
-		removeButton = tkinter.Button(frame, text = "Remove") #add command=removeHandler parameter
+		removeButton = tkinter.Button(frame, text = "Remove", command=removeHandler) #add command=removeHandler parameter
 		removeButton.pack()
 
-		containsButton = tkinter.Button(frame, text = "Contains?") #add command=containsHandler parameter
+		containsButton = tkinter.Button(frame, text = "Contains?", command=containsHandler) #add command=containsHandler parameter
 		containsButton.pack()
+
 
 def main():
 	root = tkinter.Tk()
