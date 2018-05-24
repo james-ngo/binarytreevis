@@ -33,16 +33,19 @@ class BinarySearchTree:
 		if self.is_empty():
 			return None
 		else:
-			item = height_helper(self.root)
-			height = 0
-			node = self.root
-			while node.item != item:
-				if node.item > item:
-					node = node.left
-				elif node.item < item:
-					node = node.right
-				height += 1
-			return height
+			leaves = height_helper(self.root, [])
+			heights = []
+			for item in leaves:
+				node = self.root
+				height = 0
+				while node.item != item:
+					if item < node.item:
+						node = node.left
+					elif item > node.item:
+						node = node.right
+					height += 1
+				heights.append(height)
+			return max(heights)
 
 	def inorder(self):
 		if self.is_empty():
@@ -122,7 +125,6 @@ def delete_helper(node, item):
 	else:
 		return delete_helper(node.right, item)
 
-
 def max_helper(node):
 	if node.right == None:
 		return node.item
@@ -157,12 +159,13 @@ def inorder_helper(node, inorderlst):
 		inorderlst = inorder_helper(node.right, inorderlst)
 	return inorderlst
 
-def height_helper(node):
-	if node.left == None and node.right == None:
-		return node.item
-	leafitem1 = height_helper(node.left)
-	leafitem2 = height_helper(node.right)
-	return max(leafitem1, leafitem2)
+def height_helper(node, leaves_list):
+	if node == None:
+		return []
+	elif node.left == None and node.right == None:
+		return [node.item]
+	else:
+		return leaves_list + height_helper(node.left, leaves_list) + height_helper(node.right, leaves_list)
 
 def insert_helper(tree, node, item):
 	if tree.is_empty():
