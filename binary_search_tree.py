@@ -29,6 +29,9 @@ class BinarySearchTree:
 	def find_max(self):
 		return max_helper(self.root)
 
+	def numItems(self):
+		return numItems_helper(self.root)
+
 	def tree_height(self):
 		if self.is_empty():
 			return None
@@ -88,7 +91,7 @@ class BinarySearchTree:
 			elif self.root.left == None:
 				self.root = self.root.right
 			else:
-				min_item = min_helper(self.root.right)
+				min_item = max_helper(self.root.left)
 				self.delete(min_item)
 				self.root = TreeNode(min_item, self.root.left, self.root.right)
 			return True
@@ -101,7 +104,7 @@ class BinarySearchTree:
 			elif node.left.left == None:
 				node.left = node.left.right
 			else:
-				min_item = min_helper(node.left.right)
+				min_item = max_helper(node.left.left)
 				self.delete(min_item)
 				node.left = TreeNode(min_item, node.left.left, node.left.right)
 		elif node.right != None and node.right.item == item:
@@ -112,7 +115,7 @@ class BinarySearchTree:
 			elif node.right.left == None:
 				node.right = node.right.right
 			else:
-				min_item = min_helper(node.right.right)
+				min_item = max_helper(node.right.left)
 				self.delete(min_item)
 				node.right = TreeNode(min_item, node.right.left, node.right.right)
 		return True
@@ -124,6 +127,11 @@ def delete_helper(node, item):
 		return delete_helper(node.left, item)
 	else:
 		return delete_helper(node.right, item)
+
+def numItems_helper(node):
+	if node == None:
+		return 0
+	return 1 + numItems_helper(node.left) + numItems_helper(node.right)
 
 def max_helper(node):
 	if node.right == None:
