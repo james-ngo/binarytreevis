@@ -1,10 +1,21 @@
 from queue_linked import *
+from turtle import *
 
-class TreeNode:
-	def __init__(self, item, left=None, right=None):
+
+class TreeNode(RawTurtle):
+	def __init__(self, item, left=None, right=None, canvas=None):
 		self.item = item
 		self.left = left
 		self.right = right
+		self.x = None
+		self.y = None
+		if canvas != None:
+			super().__init__(canvas)
+			self.ht()
+			self.shape("circle")
+			self.penup()
+			self.speed(5)
+			self.goto(-100,-100)
 
 class BinarySearchTree:
 
@@ -15,7 +26,9 @@ class BinarySearchTree:
 			self.insert(e)
 
 	def __contains__(self, item):
-		return contains_helper(self.root, item)
+		if contains_helper(self.root, item) == False:
+			return False
+		return True
 
 	def is_empty(self):
 		return self.root == None
@@ -49,6 +62,7 @@ class BinarySearchTree:
 					height += 1
 				heights.append(height)
 			return max(heights)
+
 
 	def inorder(self):
 		if self.is_empty():
@@ -119,6 +133,8 @@ class BinarySearchTree:
 				self.delete(min_item)
 				node.right = TreeNode(min_item, node.right.left, node.right.right)
 		return True
+
+
 
 def delete_helper(node, item):
 	if (node.right != None and node.right.item == item) or (node.left != None and node.left.item == item):
@@ -194,7 +210,7 @@ def contains_helper(node,item):
 	if node == None:
 		return False
 	elif node.item == item:
-		return True
+		return node
 	elif item > node.item:
 		return contains_helper(node.right, item)
 	elif item < node.item:
