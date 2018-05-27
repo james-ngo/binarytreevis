@@ -4,29 +4,58 @@ import tkinter
 import sys
 
 
-class BTNode(RawTurtle):
-	def __init__(self, val, canvas = None):
-		self.val = val
-		if canvas != None:
-			self.col = None
-			super().__init__(canvas)
-			self.ht()
-			self.shape("circle")
-			self.penup()
-			self.speed(5)
-			self.goto(-100,-100)
-
 class Grid:
-	def __init__(self, rows, cols, screen=None):
+	def __init__(self, rows, cols, screen=None, canvas=None):
 		self.screen = screen
+		self.canvas = canvas
 		self.rows = rows
 		self.cols = cols
 		self.items = []
 		for i in range(rows):
 			self.items.append([None] * cols)
 
+
 	def __getitem__(self, index):
 		return self.items[index]
+
+	def drawNodes(self):
+		self.screen.tracer(0)
+		x_spacing = 600 // self.cols
+		y_spacing = 600 // self.rows
+		for row in range(self.rows):
+			for col in range(self.cols):
+				if self[row][col] != None:
+					self[row][col].st()
+					self[row][col].goto(25+col*x_spacing,575-row*y_spacing)
+					self[row][col].write(str(float(self[row][col].item)), False, align="center")
+					if self[row][col].left != None:
+						parent = self[row][col]
+						left_child = self[row][col].left
+						LineTurtle = RawTurtle(self.canvas)
+						LineTurtle.ht()
+						LineTurtle.penup()
+						LineTurtle.goto(25+col*x_spacing,575-row*y_spacing)
+						LineTurtle.pendown()
+						LineTurtle.goto(25+left_child.x*x_spacing,575-left_child.y*y_spacing)
+					if self[row][col].right != None:
+						parent = self[row][col]
+						right_child = self[row][col].right
+						LineTurtle = RawTurtle(self.canvas)
+						LineTurtle.ht()
+						LineTurtle.penup()
+						LineTurtle.goto(25+col*x_spacing,575-row*y_spacing)
+						LineTurtle.pendown()
+						LineTurtle.goto(25+right_child.x*x_spacing,575-right_child.y*y_spacing)
+		self.screen.update()
+
+	# def addRow(self):
+	# 	self.items.append([None] * self.cols)
+	# 	self.rows += 1
+	#
+	# def addCol(self):
+	# 	for row in self.items:
+	# 		row.append(None)
+	# 	self.cols += 1
 
 class BinaryTreeApplication(tkinter.Frame):
 	def __init__(self, master=None):
@@ -40,8 +69,10 @@ class BinaryTreeApplication(tkinter.Frame):
 		cv.pack(side = tkinter.LEFT)
 		t = RawTurtle(cv)
 		screen = t.getscreen()
-		#screen.tracer(100000)
+		screen.tracer(100000)
 
+		screen.setworldcoordinates(0,0,600,600)
+		screen.bgcolor("white")
 		t.ht()
 
 		frame = tkinter.Frame(self)
@@ -63,6 +94,7 @@ class BinaryTreeApplication(tkinter.Frame):
 		entry.pack()
 
 		tree = BinarySearchTree()
+		#grid = Grid(screen)
 
 		def insertHandler():
 			try:
@@ -72,17 +104,16 @@ class BinaryTreeApplication(tkinter.Frame):
 			if item in tree:
 				pass
 			else:
+				screen.clear()
 				tree.insert(item)
 				knuth_layout(tree.root, 0)
 				global i
 				i = 0
-				grid = Grid(tree.tree_height() + 1, tree.numItems())
+				grid = Grid(tree.tree_height() + 1, tree.numItems(), screen, cv)
 				for n in tree.inorder():
 					node = contains_helper(tree.root, n)
-					print('x:', node.x, 'y:', node.y, 'value', node.item)
-					grid[node.y][node.x] = node
-				print('------')
-
+					grid[node.y][node.x] = TreeNode(node.item, node.left, node.right, cv)
+				grid.drawNodes()
 
 		def removeHandler():
 			try:
@@ -90,8 +121,16 @@ class BinaryTreeApplication(tkinter.Frame):
 			except:
 				return
 			if item in tree:
+				screen.clear()
 				tree.delete(item)
-				print(tree.inorder())
+				knuth_layout(tree.root, 0)
+				global i
+				i = 0
+				grid = Grid(tree.tree_height() + 1, tree.numItems(), screen, cv)
+				for n in tree.inorder():
+					node = contains_helper(tree.root, n)
+					grid[node.y][node.x] = TreeNode(node.item,node.left,node.right,cv)
+				grid.drawNodes()
 			else:
 				pass
 
