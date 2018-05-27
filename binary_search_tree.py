@@ -13,6 +13,7 @@ class TreeNode(RawTurtle):
 			super().__init__(canvas)
 			self.ht()
 			self.shape("circle")
+			self.shapesize(.25, .25)
 			self.penup()
 			self.speed(5)
 			self.goto(-100,-100)
