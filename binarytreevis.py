@@ -45,21 +45,13 @@ def size_helper(node):
 	return 1 + size_helper(node.next)
 
 
-class TreeNode(RawTurtle):
-	def __init__(self, item, left=None, right=None, canvas=None):
+class TreeNode:
+	def __init__(self, item, left=None, right=None):
 		self.item = item
 		self.left = left
 		self.right = right
 		self.x = None
 		self.y = None
-		if canvas != None:
-			super().__init__(canvas)
-			self.ht()
-			self.shape("circle")
-			self.shapesize(.25, .25)
-			self.penup()
-			self.speed(5)
-			self.goto(-100,-100)
 
 class BinarySearchTree:
 
@@ -282,9 +274,15 @@ class Grid:
 		for row in range(self.rows):
 			for col in range(self.cols):
 				if self[row][col] != None:
-					self[row][col].st()
-					self[row][col].goto(100+col*x_spacing,500-row*y_spacing)
-					self[row][col].write(str(float(self[row][col].item)), False, align="center")
+					bstnode = RawTurtle(self.canvas)
+					bstnode.ht()
+					bstnode.shape("circle")
+					bstnode.shapesize(.25, .25)
+					bstnode.penup()
+					bstnode.speed(5)
+					bstnode.goto(100+col*x_spacing,500-row*y_spacing)
+					bstnode.st()
+					bstnode.write(str(float(self[row][col].item)), False, align="center")
 					if self[row][col].left != None:
 						parent = self[row][col]
 						left_child = self[row][col].left
@@ -345,21 +343,21 @@ class BinaryTreeApplication(tkinter.Frame):
 
 		def insertHandler():
 			try:
-				item = int(nodevalue.get())
+				item = float(nodevalue.get())
 			except:
 				return
 			if item in tree:
 				pass
 			else:
-				screen.clear()
 				tree.insert(item)
 				knuth_layout(tree.root, 0)
 				global i
 				i = 0
 				grid = Grid(tree.tree_height() + 1, tree.numItems(), screen, cv)
+				screen.clear()
 				for n in tree.inorder():
 					node = contains_helper(tree.root, n)
-					grid[node.y][node.x] = TreeNode(node.item, node.left, node.right, cv)
+					grid[node.y][node.x] = TreeNode(node.item, node.left, node.right)
 				grid.drawNodes()
 
 		def removeHandler():
@@ -368,15 +366,15 @@ class BinaryTreeApplication(tkinter.Frame):
 			except:
 				return
 			if item in tree:
-				screen.clear()
 				tree.delete(item)
 				knuth_layout(tree.root, 0)
 				global i
 				i = 0
 				grid = Grid(tree.tree_height() + 1, tree.numItems(), screen, cv)
+				screen.clear()
 				for n in tree.inorder():
 					node = contains_helper(tree.root, n)
-					grid[node.y][node.x] = TreeNode(node.item,node.left,node.right,cv)
+					grid[node.y][node.x] = TreeNode(node.item,node.left,node.right)
 				grid.drawNodes()
 			else:
 				pass
