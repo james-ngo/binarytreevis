@@ -367,6 +367,9 @@ class BinaryTreeApplication(tkinter.Frame):
 				return
 			if item in tree:
 				tree.delete(item)
+				if tree.is_empty():
+					screen.clear()
+					return
 				knuth_layout(tree.root, 0)
 				global i
 				i = 0
