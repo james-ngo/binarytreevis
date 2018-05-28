@@ -277,13 +277,13 @@ class Grid:
 
 	def drawNodes(self):
 		self.screen.tracer(0)
-		x_spacing = 600 // self.cols
-		y_spacing = 600 // self.rows
+		x_spacing = 500 // self.cols
+		y_spacing = 500 // self.rows
 		for row in range(self.rows):
 			for col in range(self.cols):
 				if self[row][col] != None:
 					self[row][col].st()
-					self[row][col].goto(25+col*x_spacing,575-row*y_spacing)
+					self[row][col].goto(100+col*x_spacing,500-row*y_spacing)
 					self[row][col].write(str(float(self[row][col].item)), False, align="center")
 					if self[row][col].left != None:
 						parent = self[row][col]
@@ -291,18 +291,18 @@ class Grid:
 						LineTurtle = RawTurtle(self.canvas)
 						LineTurtle.ht()
 						LineTurtle.penup()
-						LineTurtle.goto(25+col*x_spacing,575-row*y_spacing)
+						LineTurtle.goto(100+col*x_spacing,500-row*y_spacing)
 						LineTurtle.pendown()
-						LineTurtle.goto(25+left_child.x*x_spacing,575-left_child.y*y_spacing)
+						LineTurtle.goto(100+left_child.x*x_spacing,500-left_child.y*y_spacing)
 					if self[row][col].right != None:
 						parent = self[row][col]
 						right_child = self[row][col].right
 						LineTurtle = RawTurtle(self.canvas)
 						LineTurtle.ht()
 						LineTurtle.penup()
-						LineTurtle.goto(25+col*x_spacing,575-row*y_spacing)
+						LineTurtle.goto(100+col*x_spacing,500-row*y_spacing)
 						LineTurtle.pendown()
-						LineTurtle.goto(25+right_child.x*x_spacing,575-right_child.y*y_spacing)
+						LineTurtle.goto(100+right_child.x*x_spacing,500-right_child.y*y_spacing)
 		self.screen.update()
 
 class BinaryTreeApplication(tkinter.Frame):
