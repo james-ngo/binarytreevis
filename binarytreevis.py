@@ -315,7 +315,6 @@ class BinaryTreeApplication(tkinter.Frame):
 		cv.pack(side = tkinter.LEFT)
 		t = RawTurtle(cv)
 		screen = t.getscreen()
-		screen.tracer(100000)
 
 		screen.setworldcoordinates(0,0,600,600)
 		screen.bgcolor("white")
